@@ -36,8 +36,14 @@ async function getTopic (message: Message<boolean>) {
   return `${message.author.username}s Work`
 }
 
+const channels = (process.env.CHANNELS || '').split(',')
+
 client.on('messageCreate', async message => {
   try {
+    if (!channels.includes(message.channelId)) {
+      return
+    }
+
     if (message.channel.type !== 'GUILD_TEXT') {
       return
     }
