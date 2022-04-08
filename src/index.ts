@@ -11,6 +11,8 @@ const client = new Client({
   ]
 })
 
+const RENAME_COMMAND = '!rename'
+
 // Should filter accidental non-media comments, not deliberate abuse.
 function isGalleryMessage (message: Message<boolean>) {
   return message.attachments.size > 0 || // some kind of media
@@ -54,6 +56,22 @@ client.on('ready', () => {
 
 client.on('messageCreate', async message => {
   try {
+    if (message.channel.type === 'GUILD_PUBLIC_THREAD') {
+      const startMessage = await message.channel.fetchStarterMessage()
+      if (!channels.includes(startMessage.channelId)) {
+        return
+      }
+
+      if (!message.content.startsWith(RENAME_COMMAND)) {
+        return
+      }
+
+      const rename = message.content.substring(RENAME_COMMAND.length)
+      if (rename.length > 0 && startMessage.author.id === message.author.id) {
+        message.channel.setName(rename)
+      }
+    }
+
     if (!channels.includes(message.channelId)) {
       return
     }
