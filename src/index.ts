@@ -21,11 +21,11 @@ function isGalleryMessage (message: Message<boolean>) {
 }
 
 function getDeleteText (message: Message<boolean>, channel: TextChannel) {
-  return `Your message in **${channel.name}** was removed ` +
+  return `Your message in **#${channel.name} (${channel.guild.name})** was removed ` +
     'as it was not deemed to contain any work or links.\n\n' +
 
     'This channel is only intended for posting work, ' +
-    'please join the thread if you want to comment.\n\n' +
+    'please join a thread if you want to comment.\n\n' +
 
     'Your comment: ' + message.content
 }
