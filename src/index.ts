@@ -1,4 +1,4 @@
-import { Client, Intents, Message } from 'discord.js'
+import { Client, Intents, Message, TextChannel } from 'discord.js'
 import dotenv from 'dotenv'
 
 dotenv.config()
@@ -16,6 +16,16 @@ function isGalleryMessage (message: Message<boolean>) {
   return message.attachments.size > 0 || // some kind of media
     message.content.includes('```') || // code snippet
     message.content.includes('http') // link
+}
+
+function getDeleteText (message: Message<boolean>, channel: TextChannel) {
+  return `Your message in **${channel.name}** was removed ` +
+    'as it was not deemed to contain any work or links.\n\n' +
+
+    'This channel is only intended for posting work, ' +
+    'please join the thread if you want to comment.\n\n' +
+
+    'Your comment: ' + message.content
 }
 
 async function getTopic (message: Message<boolean>) {
@@ -48,17 +58,8 @@ client.on('messageCreate', async message => {
       return
     }
 
-    const content = message.content
     if (!isGalleryMessage(message)) {
-      await message.author.send(
-        `Your message in **${message.channel.name}** was removed ` +
-        'as it was not deemed to contain any work or links.\n\n' +
-
-        'This channel is only intended for posting work, ' +
-        'please join the thread if you want to comment.\n\n' +
-
-        'Your comment: ' + content
-      )
+      await message.author.send(getDeleteText(message, message.channel))
       await message.delete()
     } else {
       const thread = await message.channel.threads
