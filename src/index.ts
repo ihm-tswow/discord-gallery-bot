@@ -18,6 +18,24 @@ function isGalleryMessage (message: Message<boolean>) {
     message.content.includes('http') // link
 }
 
+async function getTopic (message: Message<boolean>) {
+  if (message.content.length > 0) {
+    const content = message.content.includes('\n')
+      ? message.content.split('\n')[0]
+      : message.content
+    return content.substring(0, Math.min(message.content.length, 32))
+  }
+
+  if (message.guild) {
+    const member = await message.guild.members.fetch(message.author)
+    if (member && member.nickname) {
+      return `${member.nickname}s Work`
+    }
+  }
+
+  return `${message.author.username}s Work`
+}
+
 client.on('messageCreate', async message => {
   try {
     if (message.channel.type !== 'GUILD_TEXT') {
@@ -37,9 +55,8 @@ client.on('messageCreate', async message => {
       )
       await message.delete()
     } else {
-      const topic = content.substring(0, Math.min(content.length, 32))
       const thread = await message.channel.threads
-        .create({ startMessage: message.id, name: topic })
+        .create({ startMessage: message.id, name: await getTopic(message) })
       thread.members.add(message.author)
     }
   } catch (err) {
