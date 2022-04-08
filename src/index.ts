@@ -48,6 +48,10 @@ async function getTopic (message: Message<boolean>) {
 
 const channels = (process.env.CHANNELS || '').split(',')
 
+client.on('ready', () => {
+  console.log('Gallery Bot ready...')
+})
+
 client.on('messageCreate', async message => {
   try {
     if (!channels.includes(message.channelId)) {
