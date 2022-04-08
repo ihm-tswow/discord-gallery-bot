@@ -19,27 +19,31 @@ function isGalleryMessage (message: Message<boolean>) {
 }
 
 client.on('messageCreate', async message => {
-  if (message.channel.type !== 'GUILD_TEXT') {
-    return
-  }
+  try {
+    if (message.channel.type !== 'GUILD_TEXT') {
+      return
+    }
 
-  const content = message.content
-  if (!isGalleryMessage(message)) {
-    await message.author.send(
-      `Your message in **${message.channel.name}** was removed ` +
-      'as it was not deemed to contain any work or links.\n\n' +
+    const content = message.content
+    if (!isGalleryMessage(message)) {
+      await message.author.send(
+        `Your message in **${message.channel.name}** was removed ` +
+        'as it was not deemed to contain any work or links.\n\n' +
 
-      'This channel is only intended for posting work, ' +
-      'please join the thread if you want to comment.\n\n' +
+        'This channel is only intended for posting work, ' +
+        'please join the thread if you want to comment.\n\n' +
 
-      'Your comment: ' + content
-    )
-    await message.delete()
-  } else {
-    const topic = content.substring(0, Math.min(content.length, 32))
-    const thread = await message.channel.threads
-      .create({ startMessage: message.id, name: topic })
-    thread.members.add(message.author)
+        'Your comment: ' + content
+      )
+      await message.delete()
+    } else {
+      const topic = content.substring(0, Math.min(content.length, 32))
+      const thread = await message.channel.threads
+        .create({ startMessage: message.id, name: topic })
+      thread.members.add(message.author)
+    }
+  } catch (err) {
+    console.log(err)
   }
 })
 
