@@ -1,0 +1,26 @@
+{
+  "dependencies": {
+    "discord.js": "^13.6.0",
+    "dotenv": "^16.0.0",
+    "source-map-support": "^0.5.21"
+  },
+  "name": "discord-gallery-bot",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^5.18.0",
+    "@typescript-eslint/parser": "^5.18.0",
+    "eslint": "^7.32.0",
+    "eslint-config-standard": "^16.0.3",
+    "eslint-plugin-import": "^2.26.0",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-promise": "^5.2.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "start": "node -r source-map-support/register dist/index"
+  },
+  "author": "ihm-tswow",
+  "license": "ISC",
+  "description": "Bot for managing a gallery-like channel using threads."
+}
