@@ -23,6 +23,7 @@ client.on('messageCreate', async message => {
     return
   }
 
+  const content = message.content
   if (!isGalleryMessage(message)) {
     await message.author.send(
       `Your message in **${message.channel.name}** was removed ` +
@@ -31,9 +32,14 @@ client.on('messageCreate', async message => {
       'This channel is only intended for posting work, ' +
       'please join the thread if you want to comment.\n\n' +
 
-      'Your comment: ' + message.content
+      'Your comment: ' + content
     )
     await message.delete()
+  } else {
+    const topic = content.substring(0, Math.min(content.length, 32))
+    const thread = await message.channel.threads
+      .create({ startMessage: message.id, name: topic })
+    thread.members.add(message.author)
   }
 })
 
